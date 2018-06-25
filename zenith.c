@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
- * This code is a part of the first MVP created in the CubeSat Z-Sat development.  *
+ * For instructions, use the zenith.h tutorial.                                    *
  * Author: jmssouza                                                                *
  *                                                                                 *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
