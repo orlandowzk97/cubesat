@@ -32,8 +32,9 @@
     int valueSetter(char *file_name, int value);
     int writeMessage(char *file_name, char *message, int position, int size, int check);
     int readMessage(char *file_name, char *message, int position, int size, int check);
-    int write_i2c(char *file_name, int packet, int qt, int addr,int chan);
     int blockBuilder(char *block, int operating_mode, int aux);
+    int write_i2c(char *file_name, int packet, int qt, int addr,int chan);
+    int read_i2c(char *file_name, int position, int addr,int chan);
     int packageCreator(char *pack_num_file, char *pack_cycle_file, char *block, char *message);
     int missedPackagesChecker(int expected_package, int received_package);
     int correctValue(int *values);
