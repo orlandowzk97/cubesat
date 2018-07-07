@@ -134,6 +134,152 @@ int blockBuilder(char *block, int operating_mode, int aux){
     return 1;
 }
 
+int write_i2c(char *file_name, int packet, int qt, int addr,int chan){
+
+    FILE *file;
+    int i;
+    char message[256];
+    int file_i2c = 0;
+    int length;
+    int a = 0;
+    int v = 0;
+    int y = 0;
+    char buffer[256] = {0};
+    char send[256] = {0};
+    char env[256] = {0};
+    if (chan == 1){
+    char *filename = (char*)"/dev/i2c-1";
+                  }
+    else{ if (chan == 2)
+            char *filename = (char*)"/dev/i2c-2";
+            else
+                return 0;
+        }
+    file = fopen(file_name, "r+b");
+    if (file != NULL){
+        fseek(file, packet*(PACK_SIZE), SEEK_SET);
+        fread(message, PACK_SIZE, qt, file);
+        fclose(file)
+    }
+    else{
+
+        return 0;
+    }
+	if ((file_i2c = open(filename, O_RDWR)) < 0)
+	{
+		printf("Failed to open the i2c bus");
+		return 0;
+	}
+
+	if (ioctl(file_i2c, I2C_SLAVE, addr) < 0)
+	{
+		printf("Failed to acquire bus access and/or talk to slave.\n");
+		return 0;
+	}
+	for (y = 0; y<qt;y++)
+    {
+	length = 32;
+	for (a = 0; a<7; a++){
+	  for (v = 0;v<32;v++)
+		{
+		 env[v] = message[a*32 + y*255 + v];
+		}
+	write(file_i2c, env, length);
+	}
+	length = 31;
+	for (v = 0;v<31;v++)
+		{
+		 env[v] = message[7*32 + y*255 + v];
+		}
+	write(file_i2c, env, length);
+	return 1;
+}
+}
+
+
+int read_i2c(char *file_name, int position, int addr,int chan){
+
+    FILE *file;
+    int i = 0;
+    int file_i2c = 0;
+    int length;
+    int a = 0;
+    int aux = 1;
+    int b = 0;
+    int v = 0;
+    char message[256];
+    char buffer[256] = {0};
+    char send[256] = {0};
+    char rec[256] = "";
+    char env[256] = {0};
+	
+    if (chan == 1){
+    char *filename = (char*)"/dev/i2c-1";
+                  }
+    else
+    	{if (chan == 2)
+            char *filename = (char*)"/dev/i2c-2";
+            else
+                return 0;
+        }
+
+	if ((file_i2c = open(filename, O_RDWR)) < 0)
+	{
+		printf("Failed to open the i2c bus");
+		return 0;
+	}
+
+	if (ioctl(file_i2c, I2C_SLAVE, addr) < 0)
+	{
+		printf("Failed to acquire bus access and/or talk to slave.\n");
+		return 0;
+	}
+
+	length = 32;
+
+	for (a = 0; a<7; a++){
+		read(file_i2c, env, length);
+    		strcat(rec,env);
+		}
+
+	length = 31;
+	read(file_i2c, env, length);
+   	strcat(rec,env);
+    	aux = rec[3];
+    	auxi = aux - 1;
+
+    	while (auxi > 0){
+        	 length = 32;
+		 for (a = 0; a<7; a++){
+		 	read(file_i2c, env, length);
+    			strcat(rec,env);
+				       }
+		 length = 31;
+		 read(file_i2c, env, length);
+    		 strcat(rec,env);
+    		 auxi--;
+                      }
+
+        file = fopen(file_name, "r+b");
+
+        if (file != NULL){
+        	fseek(file, position*(PACK_SIZE), SEEK_SET);
+        	fwrite(rec, PACK_SIZE, aux, file);
+        	fclose(file);
+                    }
+    	else{
+        	return 0;
+        }
+
+	return 1;
+
+
+}
+
+
+
+
+
 int packageCreator(char *pack_num_file, char *pack_cycle_file, char *block, char *message){
 
     char package[PACK_SIZE];
