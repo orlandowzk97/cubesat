@@ -177,23 +177,25 @@ int write_i2c(char *file_name, int packet, int qt, int addr,int chan){
 		return 0;
 	}
 	for (y = 0; y<qt;y++)
-    {
-	length = 32;
-	for (a = 0; a<7; a++){
-	  for (v = 0;v<32;v++)
-		{
-		 env[v] = message[a*32 + y*255 + v];
-		}
-	write(file_i2c, env, length);
-	}
+    	{
+		length = 32;
+		for (a = 0; a<7; a++){
+	  		for (v = 0;v<32;v++)
+				{
+		 		env[v] = message[a*32 + y*255 + v];
+				}
+			write(file_i2c, env, length);
+			}
 	length = 31;
 	for (v = 0;v<31;v++)
 		{
 		 env[v] = message[7*32 + y*255 + v];
 		}
 	write(file_i2c, env, length);
-	return 1;
+	
 }
+	
+	return 1;
 }
 
 
@@ -218,7 +220,7 @@ int read_i2c(char *file_name, int position, int addr,int chan){
                   }
     else
     	{if (chan == 2)
-            char *filename = (char*)"/dev/i2c-2";
+           	char *filename = (char*)"/dev/i2c-2";
             else
                 return 0;
         }
@@ -272,8 +274,6 @@ int read_i2c(char *file_name, int position, int addr,int chan){
         }
 
 	return 1;
-
-
 }
 
 
